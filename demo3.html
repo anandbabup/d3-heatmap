@@ -1,0 +1,131 @@
+<html>
+
+<head>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//d3js.org/d3-scale-chromatic.v1.min.js"></script>
+</head>
+
+<body>
+    <svg id="seq1" width="500" height="40"></svg><br />
+    <br />
+    <svg id="seq2" width="375" height="40"></svg><br />
+    <br />
+    <svg id="seq3" width="250" height="40"></svg>
+    <script>
+        var colorA = "purple", colorB = "orange";
+        var color1 = [];
+        var color2 = [];
+        var color3 = [];
+
+        function drawScale3(id, interpolator) {
+            var data = Array.from(Array(100).keys());
+
+            var cScale = d3.scaleSequential()
+                .interpolator(interpolator)
+                .domain([0, 99]);
+
+            var xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([0, 249]);
+
+            var u = d3.select("#" + id)
+                .selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", (d) => Math.floor(xScale(d)))
+                .attr("y", 0)
+                .attr("height", 40)
+                .attr("width", (d) => {
+                    if (d == 99) {
+                        return 6;
+                    }
+                    return Math.floor(xScale(d + 1)) - Math.floor(xScale(d)) + 1;
+                })
+                .attr("fill", (d) => { color3.push(cScale(d)); return cScale(d); });
+        }
+
+        drawScale3("seq3", d3.interpolate(colorA, colorB));
+
+
+        function drawScale2(id, interpolator) {
+            var data = Array.from(Array(140).keys());
+
+            var cScale = d3.scaleSequential()
+                .interpolator(interpolator)
+                .domain([0, 139]);
+
+            var xScale = d3.scaleLinear()
+                .domain([0, 139])
+                .range([0, 374]);
+
+            var u = d3.select("#" + id)
+                .selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", (d) => Math.floor(xScale(d)))
+                .attr("y", 0)
+                .attr("height", 40)
+                .attr("width", (d) => {
+                    if (d == 139) {
+                        return 6;
+                    }
+                    return Math.floor(xScale(d + 1)) - Math.floor(xScale(d)) + 1;
+                })
+                .attr("fill", (d) => { color2.push(cScale(d)); return cScale(d); });
+        }
+
+        drawScale2("seq2", d3.interpolate(colorA, colorB));
+
+        function drawScale(id, interpolator) {
+            var data = Array.from(Array(200).keys());
+
+            var cScale = d3.scaleSequential()
+                .interpolator(interpolator)
+                .domain([0, 199]);
+
+            var xScale = d3.scaleLinear()
+                .domain([0, 199])
+                .range([0, 499]);
+
+            var u = d3.select("#" + id)
+                .selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", (d) => Math.floor(xScale(d)))
+                .attr("y", 0)
+                .attr("height", 40)
+                .attr("width", (d) => {
+                    if (d == 199) {
+                        return 6;
+                    }
+                    return Math.floor(xScale(d + 1)) - Math.floor(xScale(d)) + 1;
+                })
+                .attr("fill", (d) => { color1.push(cScale(d)); return cScale(d); });
+        }
+
+        drawScale("seq1", d3.interpolate(colorA, colorB));
+
+        function duplicate(arr) {
+            var object = {};
+            var result = [];
+
+            arr.forEach(function (item) {
+                if (!object[item])
+                    object[item] = 0;
+                object[item] += 1;
+            })
+
+            for (var prop in object) {
+                if (object[prop] >= 2) {
+                    result.push(prop);
+                }
+            }
+            return result;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<html>
+
+<head>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//d3js.org/d3-scale-chromatic.v1.min.js"></script>
+</head>
+
+<body>
+    <svg id="seqX" width="100" height="50"></svg>100px - 4000 points<br />
+    <br />
+    <svg id="seqY" width="100" height="50"></svg>100px - 100 points<br />
+    <script>
+        var colorA = "purple", colorB = "orange";
+        var color1 = [];
+        var color2 = [];
+
+        var x1 = [];
+        var x2 = [];
+
+        var y1 = [];
+        var y1 = [];
+
+        function drawScaleX(id, interpolator) {
+            var data = Array.from(Array(4000).keys());
+            
+            var cScale = d3.scaleSequential()
+                .interpolator(interpolator)
+                .domain([0, 3999]);
+
+            var xScale = d3.scaleLinear()
+                .domain([0, 3999])
+                .range([0, 99]);
+
+            var u = d3.select("#" + id)
+                .selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                //.attr("x", (d) => Math.floor(xScale(d)))
+                .attr("x", (d) => { x1.push(Math.floor(xScale(d))); return Math.floor(xScale(d)); })
+                .attr("y", 0)
+                .attr("height", 40)
+                .attr("width", (d) => {
+                    if (d == 3999) {
+                        return 6;
+                    }
+                    return Math.floor(xScale(d + 1)) - Math.floor(xScale(d)) + 1;
+                })
+                .attr("fill", (d) => { color1.push(cScale(d)); return cScale(d); });
+        }
+
+        drawScaleX("seqX", d3.interpolate(colorA, colorB));
+
+
+        function drawScale(id, interpolator) {
+            var data = Array.from(Array(100).keys());
+
+            var cScale = d3.scaleSequential()
+                .interpolator(interpolator)
+                .domain([0, 99]);
+
+            var xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([0, 99]);
+
+            var u = d3.select("#" + id)
+                .selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                //.attr("x", (d) => Math.floor(xScale(d)))
+                .attr("x", (d) => { x2.push(Math.floor(xScale(d))); return Math.floor(xScale(d)); })
+                .attr("y", 0)
+                .attr("height", 40)
+                .attr("width", (d) => {
+                    if (d == 99) {
+                        return 6;
+                    }
+                    return Math.floor(xScale(d + 1)) - Math.floor(xScale(d)) + 1;
+                })
+                .attr("fill", (d) => { color2.push(cScale(d)); return cScale(d); });
+        }
+
+        drawScale("seqY", d3.interpolate(colorA, colorB));
+
+        function duplicate(arr) {
+            var object = {};
+            var result = [];
+            var duplicateCount = 0;
+
+            arr.forEach(function (item) {
+                if (!object[item])
+                    object[item] = 0;
+                object[item] += 1;
+            })
+
+            for (var prop in object) {
+                if (object[prop] >= 2) {
+                    duplicateCount += object[prop]-1;
+                    result.push(prop);
+                }
+            }
+            console.log(duplicateCount);
+            //return result;
+        }
+
+        duplicate([5, 1, 1, 1, 2, 2, 3, 4, 4]);
+    </script>
+</body>
+
+</html>
