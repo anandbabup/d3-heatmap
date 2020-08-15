@@ -13,7 +13,11 @@
     <br />
     <br />
 
-    <canvas id="canvas" width="100" height="50"></canvas> C) Unique colors from A (~370 => 100)
+    <canvas id="canvas" width="100" height="50"></canvas> C) Unique colors from A (~370 => 100)<br />
+    <canvas id="canvas1" width="3800" height="2160"></canvas><br />
+    <button id="btn" click="copy()">Copy canvas</button>
+    Image
+    <img id="img">
     <script>
         var colorA = "purple", colorB = "orange";
         var color1 = [];
@@ -108,6 +112,54 @@
             console.log("End", cScale(99));
         }
         drawUsingUnique();
+
+        function drawUsingUnique1() {
+            var c = document.getElementById("canvas1");
+            var ctx = c.getContext("2d");
+
+            var cScale = d3.scaleSequential()
+                .interpolator(d3.interpolate(colorA, colorB))
+                .domain([0, 99]);
+
+            performance.mark("c-start");
+            var wPos = 0;
+            var hPos = 0;
+            var column = 10; //if it is 10, 10*100px = 1000px
+            var rows = 450;
+
+            var canvas = document.getElementById('canvas1');
+            var ctx = canvas.getContext('2d');
+            var id = ctx.getImageData(0, 0, 1, 1);
+            id.data[3] = 255;
+
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < column; x++) {
+                    for (let index = 0; index < 100; index++) {
+                        // ctx.fillStyle = cScale(index);
+                        var r = Math.floor(Math.random() * 256);
+                        var g = Math.floor(Math.random() * 256);
+                        var b = Math.floor(Math.random() * 256);
+
+                        // ctx.fillRect(wPos, hPos, 1, 1);
+                        id.data[0] = r;
+                        id.data[1] = g;
+                        id.data[2] = b;
+                        ctx.putImageData(id, wPos, hPos);
+
+                        wPos++;
+                    }
+                }
+                wPos = 0;
+                hPos++;
+            }
+            performance.mark("c-end");
+            performance.measure("hMapTest", "c-start", "c-end");
+
+
+        }
+        drawUsingUnique1();
+
+
 
         // function duplicate(arr) {
         //     var object = {};
